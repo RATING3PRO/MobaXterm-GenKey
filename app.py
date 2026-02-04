@@ -3,10 +3,11 @@
 import os
 import sys
 import zipfile
-import io  # <--- 引入 io 模块，用于内存操作
-from flask import Flask, request, send_file, make_response
+import io
+from flask import Flask, request, send_file, make_response, send_from_directory
 
-app = Flask(__name__)
+# Configure static and template folders to point to the built frontend
+app = Flask(__name__, static_folder='web/dist', static_url_path='')
 
 # --- 核心加解密和编码逻辑 (这部分无需改动) ---
 VariantBase64Table = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='
@@ -82,8 +83,8 @@ def GenerateLicenseInMemory(Type: LicenseType, Count: int, UserName: str, MajorV
 # --- 重构后的 Flask 路由 ---
 @app.route('/')
 def index():
-    """提供一个简单的使用说明页面"""
-    return send_file('index.html')
+    """Serve the modern frontend"""
+    return send_from_directory(app.static_folder, 'index.html')
 
 
 @app.route('/gen')
@@ -116,11 +117,10 @@ def generate_and_download_license():
         license_file_stream,
         mimetype='application/zip',
         as_attachment=True,
-        download_name='Custom.mxtpro'  # <--- 使用了正确的参数名
+        download_name='Custom.mxtpro'
     )
 
 
 if __name__ == '__main__':
     # 建议开启 debug=True 进行开发调试，部署时设为 False
     app.run(host='0.0.0.0', port=5000, debug=True)
-

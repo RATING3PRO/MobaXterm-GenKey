@@ -1,13 +1,27 @@
-FROM python:3.6-slim
+# Stage 1: Build the frontend
+FROM node:22-slim AS frontend-builder
+WORKDIR /web
+COPY web/package*.json ./
+RUN npm install
+COPY web/ ./
+RUN npm run build
 
-MAINTAINER malaohu <tua@live.cn>
+# Stage 2: Run the Flask backend
+FROM python:3.11-slim
+WORKDIR /app
 
-WORKDIR /usr/src/app
-
+# Install dependencies
 COPY requirements.txt ./
-
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy backend code
 COPY . .
 
-CMD [ "python", "./app.py" ]
+# Copy built frontend from Stage 1
+COPY --from=frontend-builder /web/dist ./web/dist
+
+# Expose port
+EXPOSE 5000
+
+# Run the application
+CMD [ "python", "app.py" ]
