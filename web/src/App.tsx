@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Github, Download, Languages, User, Hash, Layers, ShieldCheck, ExternalLink } from 'lucide-react';
+import { Github, Download, Languages, User, Hash, Layers, ShieldCheck } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -48,7 +48,7 @@ function App() {
   const [lang, setLang] = useState<Lang>('zh');
   const [formData, setFormData] = useState({
     name: '',
-    ver: '25.2',
+    ver: '',
     count: '1'
   });
   const [loading, setLoading] = useState(false);
@@ -226,11 +226,6 @@ function App() {
               <Github className="w-4 h-4" />
               {t.githubLink}
             </a>
-            <div className="w-1 h-1 bg-slate-300 rounded-full" />
-            <span className="text-slate-400 text-xs font-medium flex items-center gap-1.5">
-              <ExternalLink className="w-3.5 h-3.5" />
-              v25.2
-            </span>
           </div>
         </div>
 
