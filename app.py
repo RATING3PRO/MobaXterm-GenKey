@@ -122,5 +122,6 @@ def generate_and_download_license():
 
 
 if __name__ == '__main__':
-    # 建议开启 debug=True 进行开发调试，部署时设为 False
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Production mode by default, set FLASK_DEBUG=1 for development
+    debug_mode = os.environ.get('FLASK_DEBUG', '0') == '1'
+    app.run(host='0.0.0.0', port=5000, debug=debug_mode)
